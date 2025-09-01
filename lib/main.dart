@@ -4,6 +4,7 @@ import 'package:laundry_app/views/buttomNav.dart';
 import 'package:laundry_app/views/home.dart';
 import 'package:laundry_app/views/kiloan_screen.dart';
 import 'package:laundry_app/views/login_api_screen.dart';
+import 'package:laundry_app/views/order_screen.dart';
 import 'package:laundry_app/views/profile_screen.dart';
 import 'package:laundry_app/views/satuan_screen.dart';
 
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         KiloanScreen.id: (context) => KiloanScreen(),
         SatuanScreen.id: (context) => SatuanScreen(),
         BuatPesanan.id: (context) => BuatPesanan(),
+        OrderScreen.id: (context) => OrderScreen(),
       },
     );
   }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:laundry_app/api/register_user.dart';
-import 'package:laundry_app/extension/navigation.dart';
 import 'package:laundry_app/models/get_user_model.dart';
-import 'package:laundry_app/views/login_api_screen.dart';
 
 class ProfileAPIScreen extends StatefulWidget {
   const ProfileAPIScreen({super.key});
@@ -32,28 +30,26 @@ class _ProfileAPIScreenState extends State<ProfileAPIScreen> {
     });
 
     try {
-      print("Loading profile data...");
       final data = await AuthenticationAPI.getProfile();
-      print("Profile data loaded: ${data.toJson()}");
-
-      final userDataItem = data.data?.isNotEmpty == true ? data.data![0] : null;
 
       setState(() {
         userData = data;
-        _nameController.text = userDataItem?.name ?? '';
-        _emailController.text = userDataItem?.email ?? '';
+        _nameController.text = data.data?.name ?? '';
+        _emailController.text = data.data?.email ?? '';
         isLoading = false;
+        print(userData);
       });
     } catch (e) {
-      print("Error loading profile: $e");
+      // print("Error loading profile: $e");
       setState(() {
         errorMessage = e.toString();
         isLoading = false;
       });
+      print(e);
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Gagal memuat profil: $e")));
+      // ScaffoldMessenger.of(
+      //   context,
+      // ).showSnackBar(SnackBar(content: Text("Gagal memuat profil: $e")));
     }
   }
 
@@ -193,9 +189,7 @@ class _ProfileAPIScreenState extends State<ProfileAPIScreen> {
                           style: TextStyle(fontSize: 20, color: Colors.white),
                         ),
                         Text(
-                          userData?.data?.isNotEmpty == true
-                              ? userData!.data![0].name ?? 'Tidak tersedia'
-                              : 'Tidak tersedia',
+                          userData?.data?.name?.toString() ?? '',
                           style: TextStyle(fontSize: 20, color: Colors.white),
                         ),
                       ],
@@ -221,9 +215,7 @@ class _ProfileAPIScreenState extends State<ProfileAPIScreen> {
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                         Text(
-                          userData?.data?.isNotEmpty == true
-                              ? userData!.data![0].email ?? 'Tidak tersedia'
-                              : 'Tidak tersedia',
+                          userData?.data?.email?.toString() ?? '',
                           style: TextStyle(fontSize: 20, color: Colors.white),
                         ),
                       ],
@@ -238,12 +230,12 @@ class _ProfileAPIScreenState extends State<ProfileAPIScreen> {
             //   },
             //   child: Text("Logout"),
             // ),
-            FloatingActionButton(
-              onPressed: () {
-                context.pushReplacement(LoginScreen());
-              },
-              child: Image.asset("name"),
-            ),
+            // FloatingActionButton(
+            //   onPressed: () {
+            //     context.pushReplacement(LoginScreen());
+            //   },
+            //   child: Image.asset("name"),
+            // ),
           ],
         ),
       ),

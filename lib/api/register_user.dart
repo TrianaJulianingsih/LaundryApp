@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:laundry_app/preference/shared_preference.dart';
 import 'package:laundry_app/api/endpoint/endpoint.dart';
 import 'package:laundry_app/models/get_user_model.dart';
 import 'package:laundry_app/models/register_model.dart';
+import 'package:laundry_app/preference/shared_preference.dart';
 
 class AuthenticationAPI {
   static Future<RegisterUserModel> registerUser({
@@ -72,10 +72,13 @@ class AuthenticationAPI {
       url,
       headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
     );
+    // print(response.body);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       return GetUserModel.fromJson(json.decode(response.body));
     } else {
       final error = json.decode(response.body);
+      print(error);
       throw Exception(error["message"] ?? "Register gagal");
     }
   }

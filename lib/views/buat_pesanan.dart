@@ -10,11 +10,11 @@ class BuatPesanan extends StatefulWidget {
 }
 
 class _TugasTujuhState extends State<BuatPesanan> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
             children: [
@@ -31,7 +31,7 @@ class _TugasTujuhState extends State<BuatPesanan> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
                         onPressed: () {
@@ -40,9 +40,9 @@ class _TugasTujuhState extends State<BuatPesanan> {
                         icon: Icon(Icons.arrow_back, color: Colors.white),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(right: 150),
+                        padding: const EdgeInsets.only(left: 30),
                         child: Text(
-                          "Kategori",
+                          "Buat Pesanan",
                           style: TextStyle(
                             fontFamily: "Montserrat_Bold",
                             fontSize: 20,
@@ -54,6 +54,15 @@ class _TugasTujuhState extends State<BuatPesanan> {
                   ),
                 ),
               ),
+            ],
+          ),
+          Text("Detail Pesanan"),
+          Text("Kiloan"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Image.asset("assets/images/kaos.png", height: 40, width: 40),
+              Text("Kaos"),
             ],
           ),
         ],
