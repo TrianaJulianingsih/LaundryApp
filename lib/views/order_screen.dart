@@ -12,7 +12,7 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _TugasTujuhState extends State<OrderScreen> {
-  Order? orders;
+  GetProfile? orders;
   String? errorMessage;
   bool isLoading = false;
 

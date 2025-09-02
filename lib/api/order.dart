@@ -7,7 +7,7 @@ import 'package:laundry_app/models/register_model.dart';
 import 'package:laundry_app/preference/shared_preference.dart';
 
 class AuthenticationAPI {
-  static Future<Order> addOrder({
+  static Future<GetProfile> addOrder({
     required String layanan,
     required String service,
     required int item,
@@ -22,7 +22,7 @@ class AuthenticationAPI {
       headers: {"Accept": "application/json"},
     );
     if (response.statusCode == 200) {
-      return Order.fromJson(json.decode(response.body));
+      return GetProfile.fromJson(json.decode(response.body));
     } else {
       final error = json.decode(response.body);
       throw Exception(error["message"] ?? "Register gagal");

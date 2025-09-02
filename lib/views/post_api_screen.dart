@@ -14,7 +14,7 @@ class _PostApiScreenState extends State<PostApiScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  Order? user;
+  GetProfile? user;
   String? errorMessage;
   bool isVisibility = false;
   bool isLoading = false;

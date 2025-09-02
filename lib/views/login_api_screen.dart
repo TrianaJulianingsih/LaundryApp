@@ -19,7 +19,7 @@ class _MyWidgetState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Order? user;
+  GetProfile? user;
   String? errorMessage;
   bool isVisibility = false;
   bool isLoading = false;
@@ -114,11 +114,11 @@ class _MyWidgetState extends State<LoginScreen> {
                 children: [
                   // SizedBox(height: 42),
                   Padding(
-                    padding: const EdgeInsets.only(right: 112),
+                    padding: const EdgeInsets.only(right: 50),
                     child: Text(
-                      "Welcome Back",
+                      "Selamat Datang Kembali",
                       style: TextStyle(
-                        fontSize: 32,
+                        fontSize: 25,
                         fontWeight: FontWeight.w700,
                         fontFamily: "Gilroy_Medium",
                       ),
@@ -126,9 +126,9 @@ class _MyWidgetState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 12),
                   Padding(
-                    padding: const EdgeInsets.only(right: 39),
+                    padding: const EdgeInsets.only(right: 20, left: 35),
                     child: Text(
-                      "Welcome back to Estero. Have a good time",
+                      "Selamat datang kembali di Laundry Jaya. Have a good time",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -154,7 +154,7 @@ class _MyWidgetState extends State<LoginScreen> {
                           controller: emailController,
                           decoration: InputDecoration(
                             hint: Text(
-                              "Your Email/id",
+                              "Email/id Anda",
                               style: TextStyle(
                                 color: const Color.fromARGB(223, 85, 85, 88),
                                 fontWeight: FontWeight.w500,
@@ -203,7 +203,7 @@ class _MyWidgetState extends State<LoginScreen> {
                             ),
                             border: InputBorder.none,
                             hint: Text(
-                              "Your Password",
+                              "Kata Sandi Anda",
                               style: TextStyle(
                                 color: const Color.fromARGB(195, 61, 61, 62),
                                 fontWeight: FontWeight.w500,
@@ -228,7 +228,7 @@ class _MyWidgetState extends State<LoginScreen> {
                   Padding(
                     padding: const EdgeInsets.only(right: 210),
                     child: Text(
-                      "Forget Password ?",
+                      "Lupa Password ?",
                       style: TextStyle(
                         color: const Color.fromARGB(148, 62, 62, 70),
                         fontSize: 12,
@@ -311,7 +311,7 @@ class _MyWidgetState extends State<LoginScreen> {
                         ),
                       ),
                       child: Text(
-                        "Login",
+                        "Masuk",
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: "Montserrat",
@@ -333,7 +333,7 @@ class _MyWidgetState extends State<LoginScreen> {
                           ),
                         ),
                         Text(
-                          "Or continue with",
+                          "Atau masuk dengan",
                           style: TextStyle(
                             color: const Color.fromARGB(200, 62, 62, 70),
                             fontFamily: "Poppins_Medium",
@@ -424,7 +424,7 @@ class _MyWidgetState extends State<LoginScreen> {
                   Center(
                     child: Text.rich(
                       TextSpan(
-                        text: "Don't have an account? ",
+                        text: "Belum punya akun? ",
                         style: TextStyle(
                           color: const Color.fromARGB(182, 100, 100, 106),
                           fontFamily: "Poppins_Regular",
@@ -436,7 +436,7 @@ class _MyWidgetState extends State<LoginScreen> {
                               ..onTap = () {
                                 context.push(PostApiScreen());
                               },
-                            text: " Register",
+                            text: " Daftar",
                             style: TextStyle(
                               fontSize: 12,
                               color: const Color.fromARGB(255, 11, 39, 164),

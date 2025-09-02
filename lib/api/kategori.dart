@@ -7,18 +7,23 @@ import 'package:laundry_app/models/register_model.dart';
 import 'package:laundry_app/preference/shared_preference.dart';
 
 class KategoriAPI {
-  static Future<Order> addKategori({required String name}) async {
-    final url = Uri.parse(Endpoint.order);
+  static Future<Map<String, dynamic>> addKategori({
+    required String name,
+  }) async {
+    final url = Uri.parse(Endpoint.layanan);
+    final token = await PreferenceHandler.getToken();
+
     final response = await http.post(
       url,
       body: {"name": name},
-      headers: {"Accept": "application/json"},
+      headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
     );
-    if (response.statusCode == 200) {
-      return Order.fromJson(json.decode(response.body));
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return json.decode(response.body);
     } else {
       final error = json.decode(response.body);
-      throw Exception(error["message"] ?? "Register gagal");
+      throw Exception(error["message"] ?? "Tambah kategori gagal");
     }
   }
 
@@ -37,6 +42,13 @@ class KategoriAPI {
       final error = json.decode(response.body);
       print(error);
       throw Exception(error["message"] ?? "Register gagal");
+    }
+  }
+
+  static Future<void> hapusKategori(int id) async {
+    final response = await http.delete(Uri.parse("${Endpoint.layanan}/$id"));
+    if (response.statusCode != 200) {
+      throw Exception("Gagal hapus kategori");
     }
   }
 }

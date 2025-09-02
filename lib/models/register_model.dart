@@ -4,20 +4,20 @@
 
 import 'dart:convert';
 
-Order registerUserModelFromJson(String str) =>
-    Order.fromJson(json.decode(str));
+GetProfile registerUserModelFromJson(String str) =>
+    GetProfile.fromJson(json.decode(str));
 
-String registerUserModelToJson(Order data) =>
+String registerUserModelToJson(GetProfile data) =>
     json.encode(data.toJson());
 
-class Order {
+class GetProfile {
   String? message;
   Data? data;
 
-  Order({this.message, this.data});
+  GetProfile({this.message, this.data});
 
-  factory Order.fromJson(Map<String, dynamic> json) =>
-      Order(
+  factory GetProfile.fromJson(Map<String, dynamic> json) =>
+      GetProfile(
         message: json["message"],
         data: json["data"] == null ? null : Data.fromJson(json["data"]),
       );

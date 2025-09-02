@@ -16,6 +16,98 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _TugasTujuhState extends State<HomeScreen> {
+  final _formKey = GlobalKey<FormState>();
+  // final TextEditingController _namaController = TextEditingController();
+
+  Future<void> showTambahKategoriDialog(
+    BuildContext context,
+    Function onSukses,
+  ) async {
+    final TextEditingController _controller = TextEditingController();
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Tambah Kategori"),
+          content: TextField(
+            controller: _controller,
+            decoration: InputDecoration(
+              labelText: "Nama Kategori",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Batal"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (_controller.text.isNotEmpty) {
+                  try {
+                    await KategoriAPI.addKategori(name: _controller.text);
+                    Navigator.pop(context); 
+                    onSukses(); 
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Kategori berhasil ditambahkan")),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Gagal menambah kategori: $e")),
+                    );
+                  }
+                }
+              },
+              child: Text("Simpan"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> showHapusKategoriDialog(
+    BuildContext context,
+    int id,
+    Function onSukses,
+  ) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Hapus Kategori"),
+          content: Text("Apakah kamu yakin ingin menghapus kategori ini?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Batal"),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              onPressed: () async {
+                try {
+                  await KategoriAPI.hapusKategori(id);
+                  Navigator.pop(context); 
+                  onSukses(); 
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Kategori berhasil dihapus")),
+                  );
+                } catch (e) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Gagal menghapus kategori: $e")),
+                  );
+                }
+              },
+              child: Text("Hapus"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,15 +296,16 @@ class _TugasTujuhState extends State<HomeScreen> {
                           crossAxisCount: 4,
                         ),
                         itemCount:
-                            kategoriList.length + 1, // <- tambahkan 1 item
+                            kategoriList.length + 1, 
                         itemBuilder: (context, index) {
                           if (index == kategoriList.length) {
-                            // Ini item terakhir = tombol tambah
                             return Column(
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    context.push(AddLayananScreen());
+                                    showTambahKategoriDialog(context, () {
+                                      setState(() {}); 
+                                    });
                                   },
                                   child: Container(
                                     height: 70,
@@ -229,45 +322,73 @@ class _TugasTujuhState extends State<HomeScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 4),
-                                Text(
-                                  "Tambah",
-                                  style: TextStyle(
-                                    fontFamily: "OpenSans_Medium",
-                                    fontSize: 11,
-                                  ),
-                                ),
+                                Text("Tambah", style: TextStyle(fontSize: 11)),
                               ],
                             );
                           }
 
-                          // Kalau bukan index terakhir, tampilkan kategori dari API
                           final kategori = kategoriList[index];
                           return Column(
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  if (kategori.name == "Laundry Satuan") {
-                                    context.pushNamed(KiloanScreen.id);
-                                  } else if (kategori.name == "Dry Cleaning") {
-                                    context.pushNamed(SatuanScreen.id);
-                                  }
-                                },
-                                child: Container(
-                                  height: 70,
-                                  width: 70,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Color(0xFF03A9F4),
+                              Stack(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      if (kategori.name == "Laundry Satuan") {
+                                        context.pushNamed(KiloanScreen.id);
+                                      } else if (kategori.name ==
+                                          "Dry Cleaning") {
+                                        context.pushNamed(SatuanScreen.id);
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 70,
+                                      width: 70,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Color(0xFF03A9F4),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          kategori.name ?? "NULL",
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  Positioned(
+                                    right: -5,
+                                    top: -5,
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.close,
+                                        size: 18,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () {
+                                        showHapusKategoriDialog(
+                                          context,
+                                          kategori.id!,
+                                          () {
+                                            setState(
+                                              () {},
+                                            ); 
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                               SizedBox(height: 4),
                               Text(
                                 kategori.name ?? "NULL",
-                                style: TextStyle(
-                                  fontFamily: "OpenSans_Medium",
-                                  fontSize: 11,
-                                ),
+                                style: TextStyle(fontSize: 11),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           );
@@ -275,6 +396,7 @@ class _TugasTujuhState extends State<HomeScreen> {
                       );
                     },
                   ),
+
                   SizedBox(height: 30),
                   Text(
                     "Riwayat",
