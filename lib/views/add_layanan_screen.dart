@@ -1,32 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:laundry_app/api/order.dart';
-import 'package:laundry_app/models/register_model.dart';
 
-class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
-  // final bool? appBar;
-  static const id = "/orderScreen";
+class AddLayananScreen extends StatefulWidget {
+  const AddLayananScreen({super.key});
+  static const id = "/addLayanan";
 
   @override
-  State<OrderScreen> createState() => _TugasTujuhState();
+  State<AddLayananScreen> createState() => _AddLayananScreenState();
 }
 
-class _TugasTujuhState extends State<OrderScreen> {
-  Order? orders;
-  String? errorMessage;
-  bool isLoading = false;
-
-  void handleOrder()async{
-    setState(() {
-      isLoading = true;
-      errorMessage = null;
-    });
-    // final layanan = 
-
-    // try{
-    //   final result = await AuthenticationAPI.addOrder(layanan: layanan, service: service, item: item, metodePembayaran: metodePembayaran, totalItem: totalItem, harga: harga)
-    // }
-  }
+class _AddLayananScreenState extends State<AddLayananScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,12 +30,18 @@ class _TugasTujuhState extends State<OrderScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    // mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.arrow_back, color: Colors.white),
+                      ),
                       Padding(
-                        padding: const EdgeInsets.only(right: 1),
+                        padding: const EdgeInsets.only(left: 30),
                         child: Text(
-                          "Pesananku",
+                          "Tambah Kategori",
                           style: TextStyle(
                             fontFamily: "Montserrat_Bold",
                             fontSize: 20,
@@ -67,7 +55,15 @@ class _TugasTujuhState extends State<OrderScreen> {
               ),
             ],
           ),
-          // DropdownButton(items: ["Kiloan", "Satuan", "VIP", "Sepatu", "Setrika", "Express"], onChanged: onChanged)
+          Text("Detail Pesanan"),
+          Text("Kiloan"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Image.asset("assets/images/kaos.png", height: 40, width: 40),
+              Text("Kaos"),
+            ],
+          ),
         ],
       ),
     );

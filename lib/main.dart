@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:laundry_app/views/add_layanan_screen.dart';
 import 'package:laundry_app/views/buat_pesanan.dart';
 import 'package:laundry_app/views/buttomNav.dart';
 import 'package:laundry_app/views/home.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         SatuanScreen.id: (context) => SatuanScreen(),
         BuatPesanan.id: (context) => BuatPesanan(),
         OrderScreen.id: (context) => OrderScreen(),
+        AddLayananScreen.id: (context) => AddLayananScreen(),
       },
     );
   }

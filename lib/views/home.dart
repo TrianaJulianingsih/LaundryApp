@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:laundry_app/extension/navigation.dart';
+import 'package:laundry_app/views/add_layanan_screen.dart';
 import 'package:laundry_app/views/kiloan_screen.dart';
 import 'package:laundry_app/views/satuan_screen.dart';
 
@@ -290,6 +291,30 @@ class _TugasTujuhState extends State<HomeScreen> {
                                 child: Image.asset("assets/images/express.png"),
                               ),
                               Text("Express", style: TextStyle(fontFamily: "OpenSans_Regular", fontSize: 12),),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Stack(
+                        children: [
+                          Column(
+                            children: [
+                              InkWell(
+                                onTap: (){
+                                  context.pushNamed(AddLayananScreen.id);
+                                },
+                                child: Container(
+                                  height: 70,
+                                  width: 70,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.white,
+                                    border: Border.all(width: 1)
+                                  ),
+                                  child: Icon(Icons.add),
+                                ),
+                              ),
+                              Text("Tambah", style: TextStyle(fontFamily: "OpenSans_Regular", fontSize: 12),),
                             ],
                           ),
                         ],

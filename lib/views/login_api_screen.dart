@@ -19,7 +19,7 @@ class _MyWidgetState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  RegisterUserModel? user;
+  Order? user;
   String? errorMessage;
   bool isVisibility = false;
   bool isLoading = false;

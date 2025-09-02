@@ -7,7 +7,7 @@ import 'package:laundry_app/models/register_model.dart';
 import 'package:laundry_app/preference/shared_preference.dart';
 
 class AuthenticationAPI {
-  static Future<RegisterUserModel> registerUser({
+  static Future<Order> registerUser({
     required String email,
     required String password,
     required String name,
@@ -19,14 +19,14 @@ class AuthenticationAPI {
       headers: {"Accept": "application/json"},
     );
     if (response.statusCode == 200) {
-      return RegisterUserModel.fromJson(json.decode(response.body));
+      return Order.fromJson(json.decode(response.body));
     } else {
       final error = json.decode(response.body);
       throw Exception(error["message"] ?? "Register gagal");
     }
   }
 
-  static Future<RegisterUserModel> loginUser({
+  static Future<Order> loginUser({
     required String email,
     required String password,
   }) async {
@@ -37,7 +37,29 @@ class AuthenticationAPI {
       headers: {"Accept": "application/json"},
     );
     if (response.statusCode == 200) {
-      return RegisterUserModel.fromJson(json.decode(response.body));
+      return Order.fromJson(json.decode(response.body));
+    } else {
+      final error = json.decode(response.body);
+      throw Exception(error["message"] ?? "Register gagal");
+    }
+  }
+
+  static Future<Order> addService({
+    required String layanan,
+    required String service,
+    required int item,
+    required String metodePembayaran,
+    required int totalItem,
+    required String harga,
+  }) async {
+    final url = Uri.parse(Endpoint.order);
+    final response = await http.post(
+      url,
+      body: {"layanan": layanan, "service": service, "item": item, "metode_pembayaran": metodePembayaran, "total_item": totalItem, "harga": harga},
+      headers: {"Accept": "application/json"},
+    );
+    if (response.statusCode == 200) {
+      return Order.fromJson(json.decode(response.body));
     } else {
       final error = json.decode(response.body);
       throw Exception(error["message"] ?? "Register gagal");
