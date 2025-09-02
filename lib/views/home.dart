@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:laundry_app/api/kategori.dart';
 import 'package:laundry_app/extension/navigation.dart';
+import 'package:laundry_app/models/kategori.dart';
 import 'package:laundry_app/views/add_layanan_screen.dart';
 import 'package:laundry_app/views/kiloan_screen.dart';
 import 'package:laundry_app/views/satuan_screen.dart';
@@ -108,7 +110,13 @@ class _TugasTujuhState extends State<HomeScreen> {
                                         top: 20,
                                         left: 20,
                                       ),
-                                      child: Text("Lacak pesanan", style: TextStyle(fontFamily: "OpenSans_Regular", fontSize: 12),),
+                                      child: Text(
+                                        "Lacak pesanan",
+                                        style: TextStyle(
+                                          fontFamily: "OpenSans_Regular",
+                                          fontSize: 12,
+                                        ),
+                                      ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
@@ -117,7 +125,10 @@ class _TugasTujuhState extends State<HomeScreen> {
                                       ),
                                       child: Text(
                                         "Anda memiliki 2 laundry aktif",
-                                        style: TextStyle(fontFamily: "Montserrat_Bold", fontSize: 14),
+                                        style: TextStyle(
+                                          fontFamily: "Montserrat_Bold",
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -161,7 +172,7 @@ class _TugasTujuhState extends State<HomeScreen> {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(top: 20, left: 20),
+              padding: EdgeInsets.only(top: 20, left: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -172,41 +183,74 @@ class _TugasTujuhState extends State<HomeScreen> {
                       fontSize: 16,
                     ),
                   ),
-                  GridView.count(
-                    crossAxisCount: 4,
-                    shrinkWrap: true,
-                    mainAxisSpacing: 4,
-                    children: [
-                      Stack(
-                        children: [
-                          Column(
-                            children: [
-                              InkWell(
-                                onTap: (){
-                                  context.pushNamed(KiloanScreen.id);
-                                },
-                                child: Container(
-                                  height: 70,
-                                  width: 70,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Color(0xFF03A9F4),
+                  FutureBuilder<KategoriModel>(
+                    future: KategoriAPI.getKategori(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Text("Gagal memuat kategori");
+                      } else if (!snapshot.hasData ||
+                          snapshot.data!.data!.isEmpty) {
+                        return Text("Kategori kosong");
+                      }
+
+                      final kategoriList = snapshot.data!.data!;
+
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                        ),
+                        itemCount:
+                            kategoriList.length + 1, // <- tambahkan 1 item
+                        itemBuilder: (context, index) {
+                          if (index == kategoriList.length) {
+                            // Ini item terakhir = tombol tambah
+                            return Column(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    context.push(AddLayananScreen());
+                                  },
+                                  child: Container(
+                                    height: 70,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: Colors.grey.shade300,
+                                    ),
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 32,
+                                      color: Colors.black54,
+                                    ),
                                   ),
-                                  child: Image.asset("assets/images/kiloan.png"),
                                 ),
-                              ),
-                              Text("Kiloan", style: TextStyle(fontFamily: "OpenSans_Regular", fontSize: 12),),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Stack(
-                        children: [
-                          Column(
+                                SizedBox(height: 4),
+                                Text(
+                                  "Tambah",
+                                  style: TextStyle(
+                                    fontFamily: "OpenSans_Medium",
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+
+                          // Kalau bukan index terakhir, tampilkan kategori dari API
+                          final kategori = kategoriList[index];
+                          return Column(
                             children: [
                               InkWell(
                                 onTap: () {
-                                  context.pushNamed(SatuanScreen.id);
+                                  if (kategori.name == "Laundry Satuan") {
+                                    context.pushNamed(KiloanScreen.id);
+                                  } else if (kategori.name == "Dry Cleaning") {
+                                    context.pushNamed(SatuanScreen.id);
+                                  }
                                 },
                                 child: Container(
                                   height: 70,
@@ -215,115 +259,31 @@ class _TugasTujuhState extends State<HomeScreen> {
                                     borderRadius: BorderRadius.circular(50),
                                     color: Color(0xFF03A9F4),
                                   ),
-                                  child: Image.asset("assets/images/satuan.png"),
                                 ),
                               ),
-                              Text("Satuan", style: TextStyle(fontFamily: "OpenSans_Regular", fontSize: 12),),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Stack(
-                        children: [
-                          Column(
-                            children: [
-                              Container(
-                                height: 70,
-                                width: 70,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Color(0xFF03A9F4),
-                                ),
-                                child: Image.asset("assets/images/vip.png"),
-                              ),
-                              Text("VIP", style: TextStyle(fontFamily: "OpenSans_Regular", fontSize: 12),),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Stack(
-                        children: [
-                          Column(
-                            children: [
-                              Container(
-                                height: 70,
-                                width: 70,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Color(0xFF03A9F4),
-                                ),
-                                child: Image.asset("assets/images/shoes.png"),
-                              ),
-                              Text("Sepatu", style: TextStyle(fontFamily: "OpenSans_Regular", fontSize: 12),),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Stack(
-                        children: [
-                          Column(
-                            children: [
-                              Container(
-                                height: 70,
-                                width: 70,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Color(0xFF03A9F4),
-                                ),
-                                child: Image.asset("assets/images/iron.png"),
-                              ),
-                              Text("Setrika", style: TextStyle(fontFamily: "OpenSans_Regular", fontSize: 12),),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Stack(
-                        children: [
-                          Column(
-                            children: [
-                              Container(
-                                height: 70,
-                                width: 70,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Color(0xFF03A9F4),
-                                ),
-                                child: Image.asset("assets/images/express.png"),
-                              ),
-                              Text("Express", style: TextStyle(fontFamily: "OpenSans_Regular", fontSize: 12),),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Stack(
-                        children: [
-                          Column(
-                            children: [
-                              InkWell(
-                                onTap: (){
-                                  context.pushNamed(AddLayananScreen.id);
-                                },
-                                child: Container(
-                                  height: 70,
-                                  width: 70,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Colors.white,
-                                    border: Border.all(width: 1)
-                                  ),
-                                  child: Icon(Icons.add),
+                              SizedBox(height: 4),
+                              Text(
+                                kategori.name ?? "NULL",
+                                style: TextStyle(
+                                  fontFamily: "OpenSans_Medium",
+                                  fontSize: 11,
                                 ),
                               ),
-                              Text("Tambah", style: TextStyle(fontFamily: "OpenSans_Regular", fontSize: 12),),
                             ],
-                          ),
-                        ],
-                      ),
-                    ],
+                          );
+                        },
+                      );
+                    },
                   ),
-                  SizedBox(height: 30,),
-                  Text("Riwayat", style: TextStyle(fontFamily: "Montserrat_Bold", fontSize: 16),),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 30),
+                  Text(
+                    "Riwayat",
+                    style: TextStyle(
+                      fontFamily: "Montserrat_Bold",
+                      fontSize: 16,
+                    ),
+                  ),
+                  SizedBox(height: 10),
                   Container(
                     height: 77,
                     width: 355,
@@ -435,7 +395,12 @@ class _TugasTujuhState extends State<HomeScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                "Selesai", style: TextStyle(fontFamily: "Baloo", fontSize: 12, color: Colors.white),
+                                "Selesai",
+                                style: TextStyle(
+                                  fontFamily: "Baloo",
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
@@ -491,7 +456,16 @@ class _TugasTujuhState extends State<HomeScreen> {
                               color: Color(0xFF0D47A1),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Center(child: Text("Selesai", style: TextStyle(fontFamily: "Baloo", fontSize: 12, color: Colors.white),)),
+                            child: Center(
+                              child: Text(
+                                "Selesai",
+                                style: TextStyle(
+                                  fontFamily: "Baloo",
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ],

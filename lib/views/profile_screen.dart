@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:laundry_app/api/register_user.dart';
+import 'package:laundry_app/extension/navigation.dart';
 import 'package:laundry_app/models/get_user_model.dart';
+import 'package:laundry_app/views/login_api_screen.dart';
 
 class ProfileAPIScreen extends StatefulWidget {
   const ProfileAPIScreen({super.key});
@@ -224,12 +226,12 @@ class _ProfileAPIScreenState extends State<ProfileAPIScreen> {
                 ],
               ),
             ),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     context.pushReplacement(LoginScreen());
-            //   },
-            //   child: Text("Logout"),
-            // ),
+            ElevatedButton(
+              onPressed: () {
+                context.pushReplacement(LoginScreen());
+              },
+              child: Text("Logout"),
+            ),
             // FloatingActionButton(
             //   onPressed: () {
             //     context.pushReplacement(LoginScreen());
