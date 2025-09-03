@@ -4,55 +4,50 @@
 
 import 'dart:convert';
 
-KategoriModel kategoriModelFromJson(String str) =>
-    KategoriModel.fromJson(json.decode(str));
+KategoriModel kategoriModelFromJson(String str) => KategoriModel.fromJson(json.decode(str));
 
 String kategoriModelToJson(KategoriModel data) => json.encode(data.toJson());
 
 class KategoriModel {
-  String? message;
-  List<Data>? data;
+    String? message;
+    List<Datum>? data;
 
-  KategoriModel({this.message, this.data});
+    KategoriModel({
+        this.message,
+        this.data,
+    });
 
-  factory KategoriModel.fromJson(Map<String, dynamic> json) => KategoriModel(
-    message: json["message"],
-    data: json["data"] == null
-        ? []
-        : List<Data>.from(json["data"].map((x) => Data.fromJson(x))),
-  );
+    factory KategoriModel.fromJson(Map<String, dynamic> json) => KategoriModel(
+        message: json["message"],
+        data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+    );
 
-  Map<String, dynamic> toJson() => {
-    "message": message,
-    "data": data == null
-        ? []
-        : List<dynamic>.from(data!.map((x) => x.toJson())),
-  };
+    Map<String, dynamic> toJson() => {
+        "message": message,
+        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+    };
 }
 
-class Data {
-  String? name;
-  DateTime? updatedAt;
-  DateTime? createdAt;
-  int? id;
+class Datum {
+    int? id;
+    String? name;
+    String? imageUrl;
 
-  Data({this.name, this.updatedAt, this.createdAt, this.id});
+    Datum({
+        this.id,
+        this.name,
+        this.imageUrl,
+    });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-    name: json["name"],
-    updatedAt: json["updated_at"] == null
-        ? null
-        : DateTime.parse(json["updated_at"]),
-    createdAt: json["created_at"] == null
-        ? null
-        : DateTime.parse(json["created_at"]),
-    id: json["id"],
-  );
+    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+        id: json["id"],
+        name: json["name"],
+        imageUrl: json["image_url"],
+    );
 
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "updated_at": updatedAt?.toIso8601String(),
-    "created_at": createdAt?.toIso8601String(),
-    "id": id,
-  };
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "image_url": imageUrl,
+    };
 }

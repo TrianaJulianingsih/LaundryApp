@@ -7,6 +7,7 @@ import 'package:laundry_app/views/laundry_satuan.dart';
 import 'package:laundry_app/views/login_api_screen.dart';
 import 'package:laundry_app/views/order_screen.dart';
 import 'package:laundry_app/views/profile_screen.dart';
+import 'package:laundry_app/views/tambah_kategori.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         SatuanScreen.id: (context) => SatuanScreen(),
         BuatPesanan.id: (context) => BuatPesanan(),
         OrderScreen.id: (context) => OrderScreen(),
+        TambahKategoriScreen.id: (context) => TambahKategoriScreen(),
       },
     );
   }

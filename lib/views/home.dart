@@ -4,6 +4,8 @@ import 'package:laundry_app/extension/navigation.dart';
 import 'package:laundry_app/models/kategori.dart';
 import 'package:laundry_app/views/dry_cleaning.dart';
 import 'package:laundry_app/views/laundry_satuan.dart';
+import 'package:laundry_app/views/tambah_kategori.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,7 +18,19 @@ class HomeScreen extends StatefulWidget {
 
 class _TugasTujuhState extends State<HomeScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _refreshKey = UniqueKey();
+  Future<KategoriModel>? _kategoriFuture;
   // final TextEditingController _namaController = TextEditingController();
+  void initState() {
+    super.initState();
+    _loadKategori();
+  }
+
+  void _loadKategori() {
+    setState(() {
+      _kategoriFuture = KategoriAPI.getKategori();
+    });
+  }
 
   Future<void> showTambahKategoriDialog(
     BuildContext context,
@@ -47,7 +61,7 @@ class _TugasTujuhState extends State<HomeScreen> {
                   try {
                     await KategoriAPI.addKategori(name: controller.text);
                     Navigator.pop(context);
-                    onSukses();
+                    _loadKategori();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("Kategori berhasil ditambahkan")),
                     );
@@ -270,7 +284,7 @@ class _TugasTujuhState extends State<HomeScreen> {
                     ),
                   ),
                   FutureBuilder<KategoriModel>(
-                    future: KategoriAPI.getKategori(),
+                    future: _kategoriFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
@@ -295,10 +309,14 @@ class _TugasTujuhState extends State<HomeScreen> {
                             return Column(
                               children: [
                                 InkWell(
-                                  onTap: () {
-                                    showTambahKategoriDialog(context, () {
-                                      setState(() {});
-                                    });
+                                  onTap: () async {
+                                    final result = await Navigator.pushNamed(
+                                      context,
+                                      TambahKategoriScreen.id,
+                                    );
+                                    if (result == true) {
+                                      _loadKategori(); // refresh kategori setelah tambah
+                                    }
                                   },
                                   child: Container(
                                     height: 70,
@@ -311,15 +329,18 @@ class _TugasTujuhState extends State<HomeScreen> {
                                         color: Color(0xFF03A9F4),
                                       ),
                                     ),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.add,
                                       size: 32,
                                       color: Color(0xFF03A9F4),
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 4),
-                                Text("Tambah", style: TextStyle(fontSize: 11)),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  "Tambah",
+                                  style: TextStyle(fontSize: 11),
+                                ),
                               ],
                             );
                           } else if (index == kategoriList.length + 1) {
@@ -410,16 +431,30 @@ class _TugasTujuhState extends State<HomeScreen> {
                                         borderRadius: BorderRadius.circular(50),
                                         color: Color(0xFF03A9F4),
                                       ),
-                                      // child: Center(
-                                      //   child: Text(
-                                      //     kategori.name ?? "NULL",
-                                      //     style: TextStyle(
-                                      //       fontSize: 10,
-                                      //       color: Colors.white,
-                                      //     ),
-                                      //     textAlign: TextAlign.center,
-                                      //   ),
-                                      // ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child:
+                                            kategori.imageUrl != null &&
+                                                kategori.imageUrl!.isNotEmpty
+                                            ? Image.network(
+                                                kategori.imageUrl!,
+                                                fit: BoxFit.cover,
+                                                errorBuilder:
+                                                    (
+                                                      context,
+                                                      error,
+                                                      stackTrace,
+                                                    ) => Icon(
+                                                      Icons.image_not_supported,
+                                                      color: Colors.grey,
+                                                    ),
+                                              )
+                                            : Icon(
+                                                Icons.image,
+                                                size: 30,
+                                                color: Colors.grey,
+                                              ),
+                                      ),
                                     ),
                                   ),
                                 ],

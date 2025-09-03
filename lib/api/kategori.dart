@@ -1,33 +1,65 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:laundry_app/api/endpoint/endpoint.dart';
 import 'package:laundry_app/models/kategori.dart';
 import 'package:laundry_app/preference/shared_preference.dart';
 
 class KategoriAPI {
+  // static Future<Map<String, dynamic>> addKategori({
+  //   required String name,
+  //   File? image,
+  // }) async {
+  //   final url = Uri.parse(Endpoint.kategori);
+  //   final token = await PreferenceHandler.getToken();
+
+  //   final response = await http.post(
+  //     url,
+  //     body: {"name": name},
+  //     headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
+  //   );
+
+  //   if (response.statusCode == 200 || response.statusCode == 201) {
+  //     return json.decode(response.body);
+  //   } else {
+  //     final error = json.decode(response.body);
+  //     throw Exception(error["message"] ?? "Tambah kategori gagal");
+  //   }
+  // }
   static Future<Map<String, dynamic>> addKategori({
     required String name,
+    File? image, 
   }) async {
-    final url = Uri.parse(Endpoint.layanan);
+    final url = Uri.parse(Endpoint.kategori); 
     final token = await PreferenceHandler.getToken();
 
-    final response = await http.post(
-      url,
-      body: {"name": name},
-      headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
-    );
+    var request = http.MultipartRequest('POST', url);
+    request.headers.addAll({
+      "Accept": "application/json",
+      "Authorization": "Bearer $token",
+    });
+
+    // kirim nama kategori
+    request.fields['name'] = name;
+
+    // upload image kalau ada
+    if (image != null) {
+      request.files.add(await http.MultipartFile.fromPath('image_url', image.path));
+    }
+
+    final response = await request.send();
+    final respStr = await response.stream.bytesToString();
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return json.decode(response.body);
+      return json.decode(respStr);
     } else {
-      final error = json.decode(response.body);
+      final error = json.decode(respStr);
       throw Exception(error["message"] ?? "Tambah kategori gagal");
     }
   }
 
   static Future<KategoriModel> getKategori() async {
-    final url = Uri.parse(Endpoint.layanan);
+    final url = Uri.parse(Endpoint.kategori);
     final token = await PreferenceHandler.getToken();
     final response = await http.get(
       url,
@@ -48,7 +80,7 @@ class KategoriAPI {
     final token = await PreferenceHandler.getToken();
 
     final response = await http.delete(
-      Uri.parse("${Endpoint.layanan}/$id"),
+      Uri.parse("${Endpoint.kategori}/$id"),
       headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
     );
 
