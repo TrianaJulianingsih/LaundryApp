@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:laundry_app/api/endpoint/endpoint.dart';
 import 'package:laundry_app/models/kategori.dart';
-import 'package:laundry_app/models/register_model.dart';
 import 'package:laundry_app/preference/shared_preference.dart';
 
 class KategoriAPI {
@@ -46,9 +45,16 @@ class KategoriAPI {
   }
 
   static Future<void> hapusKategori(int id) async {
-    final response = await http.delete(Uri.parse("${Endpoint.layanan}/$id"));
-    if (response.statusCode != 200) {
-      throw Exception("Gagal hapus kategori");
+    final token = await PreferenceHandler.getToken();
+
+    final response = await http.delete(
+      Uri.parse("${Endpoint.layanan}/$id"),
+      headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 204) {
+      final error = json.decode(response.body);
+      throw Exception(error["message"] ?? "Gagal hapus kategori");
     }
   }
 }

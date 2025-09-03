@@ -56,7 +56,8 @@ class AuthenticationAPI {
       body: {"name": name, "email": email},
       headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
     );
-
+    print(response.body);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       return GetUserModel.fromJson(json.decode(response.body));
     } else {

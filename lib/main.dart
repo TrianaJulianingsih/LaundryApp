@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:laundry_app/views/add_layanan_screen.dart';
 import 'package:laundry_app/views/buat_pesanan.dart';
 import 'package:laundry_app/views/buttomNav.dart';
+import 'package:laundry_app/views/dry_cleaning.dart';
 import 'package:laundry_app/views/home.dart';
-import 'package:laundry_app/views/kiloan_screen.dart';
+import 'package:laundry_app/views/laundry_satuan.dart';
 import 'package:laundry_app/views/login_api_screen.dart';
 import 'package:laundry_app/views/order_screen.dart';
 import 'package:laundry_app/views/profile_screen.dart';
-import 'package:laundry_app/views/satuan_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,7 +48,6 @@ class MyApp extends StatelessWidget {
         SatuanScreen.id: (context) => SatuanScreen(),
         BuatPesanan.id: (context) => BuatPesanan(),
         OrderScreen.id: (context) => OrderScreen(),
-        AddLayananScreen.id: (context) => AddLayananScreen(),
       },
     );
   }

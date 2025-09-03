@@ -65,8 +65,9 @@ class _ProfileAPIScreenState extends State<ProfileAPIScreen> {
         name: _nameController.text,
         email: _emailController.text,
       );
+      await _loadProfileData();
       setState(() {
-        userData = updateData;
+        isLoading = false;
         isEditing = false;
       });
     } catch (e) {

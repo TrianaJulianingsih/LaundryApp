@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:laundry_app/api/kategori.dart';
 import 'package:laundry_app/extension/navigation.dart';
 import 'package:laundry_app/models/kategori.dart';
-import 'package:laundry_app/views/add_layanan_screen.dart';
-import 'package:laundry_app/views/kiloan_screen.dart';
-import 'package:laundry_app/views/satuan_screen.dart';
+import 'package:laundry_app/views/dry_cleaning.dart';
+import 'package:laundry_app/views/laundry_satuan.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,7 +22,7 @@ class _TugasTujuhState extends State<HomeScreen> {
     BuildContext context,
     Function onSukses,
   ) async {
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController controller = TextEditingController();
 
     await showDialog(
       context: context,
@@ -31,7 +30,7 @@ class _TugasTujuhState extends State<HomeScreen> {
         return AlertDialog(
           title: Text("Tambah Kategori"),
           content: TextField(
-            controller: _controller,
+            controller: controller,
             decoration: InputDecoration(
               labelText: "Nama Kategori",
               border: OutlineInputBorder(),
@@ -44,11 +43,11 @@ class _TugasTujuhState extends State<HomeScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                if (_controller.text.isNotEmpty) {
+                if (controller.text.isNotEmpty) {
                   try {
-                    await KategoriAPI.addKategori(name: _controller.text);
-                    Navigator.pop(context); 
-                    onSukses(); 
+                    await KategoriAPI.addKategori(name: controller.text);
+                    Navigator.pop(context);
+                    onSukses();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("Kategori berhasil ditambahkan")),
                     );
@@ -70,9 +69,9 @@ class _TugasTujuhState extends State<HomeScreen> {
   Future<void> showHapusKategoriDialog(
     BuildContext context,
     int id,
-    Function onSukses,
+    VoidCallback onKategoriDeleted,
   ) async {
-    await showDialog(
+    return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -83,24 +82,19 @@ class _TugasTujuhState extends State<HomeScreen> {
               onPressed: () => Navigator.pop(context),
               child: Text("Batal"),
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            TextButton(
               onPressed: () async {
                 try {
                   await KategoriAPI.hapusKategori(id);
-                  Navigator.pop(context); 
-                  onSukses(); 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Kategori berhasil dihapus")),
-                  );
-                } catch (e) {
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Gagal menghapus kategori: $e")),
-                  );
+                  onKategoriDeleted();
+                } catch (e) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text("Error: $e")));
                 }
               },
-              child: Text("Hapus"),
+              child: Text("Hapus", style: TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -131,7 +125,7 @@ class _TugasTujuhState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 40),
+                        padding: const EdgeInsets.only(top: 30),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -143,19 +137,19 @@ class _TugasTujuhState extends State<HomeScreen> {
                                 fontSize: 14,
                               ),
                             ),
-                            SizedBox(width: 150),
-                            Icon(Icons.search, color: Colors.white),
-                            // SizedBox(width: 5,),
+                            SizedBox(width: 170),
                             Padding(
-                              padding: const EdgeInsets.only(right: 20),
-                              child: Image.asset(
-                                "assets/images/shopping-cart.png",
+                              padding: const EdgeInsets.only(right: 8),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.search, color: Colors.white),
                               ),
                             ),
+
+                            // SizedBox(width: 5,),
                           ],
                         ),
                       ),
-                      SizedBox(height: 5),
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
                         child: Text(
@@ -295,8 +289,7 @@ class _TugasTujuhState extends State<HomeScreen> {
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 4,
                         ),
-                        itemCount:
-                            kategoriList.length + 1, 
+                        itemCount: kategoriList.length + 2,
                         itemBuilder: (context, index) {
                           if (index == kategoriList.length) {
                             return Column(
@@ -304,7 +297,7 @@ class _TugasTujuhState extends State<HomeScreen> {
                                 InkWell(
                                   onTap: () {
                                     showTambahKategoriDialog(context, () {
-                                      setState(() {}); 
+                                      setState(() {});
                                     });
                                   },
                                   child: Container(
@@ -312,17 +305,86 @@ class _TugasTujuhState extends State<HomeScreen> {
                                     width: 70,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(50),
-                                      color: Colors.grey.shade300,
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Color(0xFF03A9F4),
+                                      ),
                                     ),
                                     child: Icon(
                                       Icons.add,
                                       size: 32,
-                                      color: Colors.black54,
+                                      color: Color(0xFF03A9F4),
                                     ),
                                   ),
                                 ),
                                 SizedBox(height: 4),
                                 Text("Tambah", style: TextStyle(fontSize: 11)),
+                              ],
+                            );
+                          } else if (index == kategoriList.length + 1) {
+                            return Column(
+                              children: [
+                                InkWell(
+                                  onTap: () async {
+                                    if (kategoriList.isNotEmpty) {
+                                      final selected = await showDialog<int>(
+                                        context: context,
+                                        builder: (context) {
+                                          return SimpleDialog(
+                                            title: Text(
+                                              "Pilih kategori yang akan dihapus",
+                                            ),
+                                            children: kategoriList.map((
+                                              kategori,
+                                            ) {
+                                              return SimpleDialogOption(
+                                                onPressed: () {
+                                                  Navigator.pop(
+                                                    context,
+                                                    kategori.id,
+                                                  );
+                                                },
+                                                child: Text(
+                                                  kategori.name ?? "Tanpa Nama",
+                                                ),
+                                              );
+                                            }).toList(),
+                                          );
+                                        },
+                                      );
+
+                                      if (selected != null) {
+                                        await showHapusKategoriDialog(
+                                          context,
+                                          selected,
+                                          () {
+                                            setState(() {});
+                                          },
+                                        );
+                                      }
+                                    }
+                                  },
+                                  child: Container(
+                                    height: 70,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Color(0xFF03A9F4),
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.delete,
+                                      size: 32,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text("Hapus", style: TextStyle(fontSize: 11)),
                               ],
                             );
                           }
@@ -348,38 +410,16 @@ class _TugasTujuhState extends State<HomeScreen> {
                                         borderRadius: BorderRadius.circular(50),
                                         color: Color(0xFF03A9F4),
                                       ),
-                                      child: Center(
-                                        child: Text(
-                                          kategori.name ?? "NULL",
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.white,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: -5,
-                                    top: -5,
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.close,
-                                        size: 18,
-                                        color: Colors.red,
-                                      ),
-                                      onPressed: () {
-                                        showHapusKategoriDialog(
-                                          context,
-                                          kategori.id!,
-                                          () {
-                                            setState(
-                                              () {},
-                                            ); 
-                                          },
-                                        );
-                                      },
+                                      // child: Center(
+                                      //   child: Text(
+                                      //     kategori.name ?? "NULL",
+                                      //     style: TextStyle(
+                                      //       fontSize: 10,
+                                      //       color: Colors.white,
+                                      //     ),
+                                      //     textAlign: TextAlign.center,
+                                      //   ),
+                                      // ),
                                     ),
                                   ),
                                 ],
@@ -408,7 +448,7 @@ class _TugasTujuhState extends State<HomeScreen> {
                   SizedBox(height: 10),
                   Container(
                     height: 77,
-                    width: 355,
+                    width: 375,
                     decoration: BoxDecoration(
                       color: Color(0xFF03A9F4),
                       borderRadius: BorderRadius.circular(10),
