@@ -1,21 +1,21 @@
 // To parse this JSON data, do
 //
-//     final kategoriModel = kategoriModelFromJson(jsonString);
+//     final layananModel = layananModelFromJson(jsonString);
 
 import 'dart:convert';
 
-KategoriModel kategoriModelFromJson(String str) =>
-    KategoriModel.fromJson(json.decode(str));
+ItemModel layananModelFromJson(String str) =>
+    ItemModel.fromJson(json.decode(str));
 
-String kategoriModelToJson(KategoriModel data) => json.encode(data.toJson());
+String layananModelToJson(ItemModel data) => json.encode(data.toJson());
 
-class KategoriModel {
+class ItemModel {
   String? message;
   List<Data>? data;
 
-  KategoriModel({this.message, this.data});
+  ItemModel({this.message, this.data});
 
-  factory KategoriModel.fromJson(Map<String, dynamic> json) => KategoriModel(
+  factory ItemModel.fromJson(Map<String, dynamic> json) => ItemModel(
     message: json["message"],
     data: json["data"] == null
         ? []
@@ -32,16 +32,28 @@ class KategoriModel {
 
 class Data {
   String? name;
-  String? image;
+  int? price;
+  int? categoryId;
+  int? serviceTypeId;
   DateTime? updatedAt;
   DateTime? createdAt;
   int? id;
 
-  Data({this.name, this.image, this.updatedAt, this.createdAt, this.id});
+  Data({
+    this.name,
+    this.price,
+    this.categoryId,
+    this.serviceTypeId,
+    this.updatedAt,
+    this.createdAt,
+    this.id,
+  });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     name: json["name"],
-    image: json["image"],
+    price: json["price"],
+    categoryId: json["category_id"],
+    serviceTypeId: json["service_type_id"],
     updatedAt: json["updated_at"] == null
         ? null
         : DateTime.parse(json["updated_at"]),
@@ -53,7 +65,9 @@ class Data {
 
   Map<String, dynamic> toJson() => {
     "name": name,
-    "image": image,
+    "price": price,
+    "category_id": categoryId,
+    "service_type_id": serviceTypeId,
     "updated_at": updatedAt?.toIso8601String(),
     "created_at": createdAt?.toIso8601String(),
     "id": id,

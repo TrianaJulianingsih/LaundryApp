@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:laundry_app/api/order.dart';
 import 'package:laundry_app/models/register_model.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -16,17 +15,18 @@ class _TugasTujuhState extends State<OrderScreen> {
   String? errorMessage;
   bool isLoading = false;
 
-  void handleOrder()async{
+  void handleOrder() async {
     setState(() {
       isLoading = true;
       errorMessage = null;
     });
-    // final layanan = 
+    // final layanan =
 
     // try{
     //   final result = await AuthenticationAPI.addOrder(layanan: layanan, service: service, item: item, metodePembayaran: metodePembayaran, totalItem: totalItem, harga: harga)
     // }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

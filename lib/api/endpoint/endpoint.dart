@@ -6,5 +6,6 @@ class Endpoint {
   static const String order = "$baseURL/orders";
   static const String kategori = "$baseURL/categories";
   static const String layanan = "$baseURL/layanan";
+  static const String items = "$baseURL/items";
   static const String logout = "$baseURL/logout";
 }

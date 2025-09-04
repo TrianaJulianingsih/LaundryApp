@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:laundry_app/api/kategori.dart';
-import 'package:laundry_app/extension/navigation.dart';
 import 'package:laundry_app/models/kategori.dart';
-import 'package:laundry_app/views/dry_cleaning.dart';
-import 'package:laundry_app/views/laundry_satuan.dart';
+import 'package:laundry_app/views/kategori_detail.dart';
 import 'package:laundry_app/views/tambah_kategori.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,6 +18,7 @@ class _TugasTujuhState extends State<HomeScreen> {
   final _refreshKey = UniqueKey();
   Future<KategoriModel>? _kategoriFuture;
   // final TextEditingController _namaController = TextEditingController();
+  @override
   void initState() {
     super.initState();
     _loadKategori();
@@ -289,7 +287,9 @@ class _TugasTujuhState extends State<HomeScreen> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
-                        return Text("Gagal memuat kategori");
+                        return Text(
+                          "Gagal memuat kategori:  ${snapshot.error}",
+                        );
                       } else if (!snapshot.hasData ||
                           snapshot.data!.data!.isEmpty) {
                         return Text("Kategori kosong");
@@ -315,7 +315,7 @@ class _TugasTujuhState extends State<HomeScreen> {
                                       TambahKategoriScreen.id,
                                     );
                                     if (result == true) {
-                                      _loadKategori(); // refresh kategori setelah tambah
+                                      _loadKategori();
                                     }
                                   },
                                   child: Container(
@@ -411,18 +411,23 @@ class _TugasTujuhState extends State<HomeScreen> {
                           }
 
                           final kategori = kategoriList[index];
+                          print(
+                            "Render kategori: ${kategori.name}, Image: ${kategori.image}",
+                          );
                           return Column(
                             children: [
                               Stack(
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      if (kategori.name == "Laundry Satuan") {
-                                        context.pushNamed(KiloanScreen.id);
-                                      } else if (kategori.name ==
-                                          "Dry Cleaning") {
-                                        context.pushNamed(SatuanScreen.id);
-                                      }
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => KategoriDetailScreen(
+                                            kategori: kategori,
+                                          ),
+                                        ),
+                                      );
                                     },
                                     child: Container(
                                       height: 70,
@@ -434,10 +439,10 @@ class _TugasTujuhState extends State<HomeScreen> {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(50),
                                         child:
-                                            kategori.imageUrl != null &&
-                                                kategori.imageUrl!.isNotEmpty
+                                            (kategori.image != null &&
+                                                kategori.image!.isNotEmpty)
                                             ? Image.network(
-                                                kategori.imageUrl!,
+                                                kategori.image!,
                                                 fit: BoxFit.cover,
                                                 errorBuilder:
                                                     (

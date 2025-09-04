@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:laundry_app/views/buat_pesanan.dart';
 import 'package:laundry_app/views/buttomNav.dart';
-import 'package:laundry_app/views/dry_cleaning.dart';
 import 'package:laundry_app/views/home.dart';
-import 'package:laundry_app/views/laundry_satuan.dart';
+import 'package:laundry_app/views/item_screen.dart';
+import 'package:laundry_app/views/kategori_detail.dart';
 import 'package:laundry_app/views/login_api_screen.dart';
 import 'package:laundry_app/views/order_screen.dart';
 import 'package:laundry_app/views/profile_screen.dart';
@@ -45,11 +45,27 @@ class MyApp extends StatelessWidget {
         ProfileAPIScreen.id: (context) => ProfileAPIScreen(),
         HomeScreen.id: (context) => HomeScreen(),
         ButtomNav.id: (context) => ButtomNav(),
-        KiloanScreen.id: (context) => KiloanScreen(),
-        SatuanScreen.id: (context) => SatuanScreen(),
         BuatPesanan.id: (context) => BuatPesanan(),
         OrderScreen.id: (context) => OrderScreen(),
         TambahKategoriScreen.id: (context) => TambahKategoriScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == KategoriDetailScreen.id) {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) {
+              return KategoriDetailScreen(kategori: args['kategori']);
+            },
+          );
+        } else if (settings.name == ItemsByCategoryScreen.id) {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) {
+              return KategoriDetailScreen(kategori: args['kategori']);
+            },
+          );
+        }
+        return null;
       },
     );
   }
